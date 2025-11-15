@@ -4,12 +4,11 @@ import fetch from "node-fetch";
 const app = express();
 app.use(express.json());
 
-// JARVIS ENDPOINT
 app.post("/jarwhis", async (req, res) => {
   const userMessage = req.body.message;
 
   if (!userMessage) {
-    return res.json({ reply: "Sir, please provide a valid command." });
+    return res.json({ reply: "Sir, please say a valid command." });
   }
 
   try {
@@ -20,33 +19,32 @@ app.post("/jarwhis", async (req, res) => {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-3.5-turbo",
+        model: "gpt-4o-mini",
         messages: [
           {
             role: "system",
-            content:
-              "You are Jarvis from Iron Man. You are intelligent, advanced, loyal, and always call the user 'Sir'. Respond like a high-tech AI assistant with confidence and personality."
+            content: "You are Jarwhis, a powerful AI assistant like Iron Man’s Jarvis. Speak formally and helpfully. Respond in short, clear sentences."
           },
           {
             role: "user",
             content: userMessage
           }
         ]
-      })
+      }),
     });
 
     const data = await response.json();
-    const reply = data?.choices?.[0]?.message?.content || "Error, Sir.";
+    const reply = data.choices?.[0]?.message?.content || "Error Sir.";
 
     res.json({ reply });
   } catch (error) {
-    res.json({ reply: "Sir, there was an error in the server." });
+    res.json({ reply: "Sir, server error happened." });
   }
 });
 
-// HOME PAGE
 app.get("/", (req, res) => {
-  res.send("Jarwhis AI Server Running - Online");
+  res.send("Jarwhis Core Server Running ⚡");
 });
 
 app.listen(3000, () => console.log("Server Started"));
+      
